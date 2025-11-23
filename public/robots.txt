@@ -1,0 +1,21 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl-delay: 10
+# Uncomment the above line to limit crawl rate if needed
+
+# Disallow crawling of admin and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Allow all other pages
+Allow: /*.html$
+Allow: /*.js$
+Allow: /*.css$
+
+# Host
+Host: https://yourdomain.com
