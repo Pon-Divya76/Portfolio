@@ -7,37 +7,36 @@ import type { NavItem } from "@/data/navigation";
 
 type NavTabsProps = {
   items: NavItem[];
+  className?: string;
 };
 
-export function NavTabs({ items }: NavTabsProps) {
+export function NavTabs({ items, className }: NavTabsProps) {
   const pathname = usePathname();
 
   return (
-    <nav
-      className="mx-auto my-8 w-full max-w-5xl rounded-2xl border border-white/20 bg-white/10 px-3 py-3 shadow-lg backdrop-blur-xl"
-      aria-label="Primary"
-    >
-      <div className="flex snap-x gap-3 overflow-x-auto pb-1 pt-1 sm:justify-center">
+    <nav className={className}>
+      <ul className="flex items-center justify-center space-x-6 text-base font-medium text-text-secondary">
         {items.map((item) => {
           const isActive = pathname === item.href;
-
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`flex min-w-[64px] items-center justify-center rounded-md border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-tight transition-all duration-200 sm:text-sm ${
-                isActive
-                  ? "bg-white/20 border-white text-white shadow-md"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {item.label}
-            </Link>
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={`relative py-2 transition-colors hover:text-text-primary ${
+                  isActive ? 'text-text-primary' : ''
+                }`}
+              >
+                {item.label}
+                <span 
+                  className={`absolute bottom-0 left-0 h-0.5 bg-accent transition-all duration-300 ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
+              </Link>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </nav>
   );
 }
-

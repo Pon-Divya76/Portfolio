@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import Head from 'next/head';
 import type { ReactNode } from "react";
 
-import RainBackground from "@/app/components/RainBackground";
 import { NavTabs } from "@/components/NavTabs";
 import { NAV_ITEMS } from "@/data/navigation";
 
@@ -12,29 +11,33 @@ import "./globals.css";
 // Base URL for absolute URLs in meta tags
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com';
 
-const poppins = Poppins({
-  weight: ['300', '400', '500', '600', '700'],
+// Use Inter as the primary font with fallbacks
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-poppins",
-  display: 'swap'
+  variable: "--font-inter",
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
 });
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"], 
-  variable: "--font-space" 
+  variable: "--font-space",
+  display: 'swap',
 });
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  themeColor: '#080b12',
+  maximumScale: 5, // Slightly more permissive for better accessibility
+  themeColor: '#0f172a', // Updated to match our primary dark color
   viewportFit: 'cover',
 };
 
 export const metadata: Metadata = {
-  title: "Pon Divya · Portfolio",
+  title: {
+    default: "Pon Divya · Portfolio",
+    template: "%s | Pon Divya",
+  },
   description: "Professional portfolio of Pon Divya - Web Developer & Designer | Modern, responsive, and interactive portfolio showcasing my work and skills.",
   keywords: ["portfolio", "web developer", "designer", "Pon Divya", "Next.js", "React", "TypeScript"],
   authors: [{ name: 'Pon Divya' }],
@@ -92,29 +95,53 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <meta name="theme-color" content="#080b12" />
+    <html 
+      lang="en" 
+      className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#0f172a" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="manifest" href="/site.webmanifest" />
-      </Head>
-      <body className={`${poppins.variable} ${spaceGrotesk.variable} font-sans viewport`}>
-        <RainBackground />
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <header className="px-4 sm:px-6">
-            <NavTabs items={NAV_ITEMS} />
-          </header>
-          <main className="flex-1 pb-16">
-            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/fonts/inter-var-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/space-grotesk-var.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="min-h-screen bg-gradient-to-br from-carbon to-graphite text-gray-100 antialiased">
+        <div className="relative flex min-h-screen flex-col">
+          <NavTabs items={NAV_ITEMS} className="sticky top-0 z-50" />
+          
+          <main className="flex-1">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
               {children}
             </div>
           </main>
+          
+          <footer className="border-t border-gray-700/30 py-6 bg-gradient-to-r from-gray-900/30 to-gray-800/30 backdrop-blur-sm">
+            <div className="container mx-auto px-4 text-center text-sm text-gray-300">
+              <p>© {new Date().getFullYear()} Pon Divya. All rights reserved.</p>
+            </div>
+          </footer>
         </div>
       </body>
     </html>
   );
 }
-
